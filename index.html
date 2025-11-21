@@ -28,11 +28,11 @@
 
       <div class="grid" style="gap: 8px;">
         <div>
-          <label for="calcPlusSelect">狙う＋</label>
+          <label for="calcPlusSelect">目標＋</label>
           <select id="calcPlusSelect">
-            <option value="2">＋2 を狙う</option>
-            <option value="4">＋4 を狙う</option>
-            <option value="6">＋6 を狙う</option>
+            <option value="2">＋2</option>
+            <option value="4">＋4</option>
+            <option value="6">＋6</option>
           </select>
           <div class="text-small">
             ※基本設定の「現在のランク」でボーダーを切り替えます。
@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="text-small">
-            スコア差分 ÷ 3 を切り上げて計算しています。
+            スコア差分 ÷ 3 を切り上げて計算しています。誤差はご愛嬌。
           </div>
         </div>
       </div>
@@ -179,7 +179,7 @@
             <label for="currentRank">現在のランク</label>
             <select id="currentRank"></select>
             <div class="text-small">
-              ※A1からスタート（必要に応じて変更）。
+              ※現在のランクに応じて変更。
             </div>
           </div>
 
@@ -377,7 +377,7 @@
       </table>
 
       <div class="text-small" style="margin-top: 6px;">
-        ※データは Firebase Firestore に保存されます。PC・スマホ・複数人で共有できます。
+        ※データは外部に保存されます。PC・スマホ・複数人で共有できます。
       </div>
     </section>
   </div>
