@@ -274,9 +274,10 @@ function buildCalendarInfo() {
     d.setDate(d.getDate() + 1);
   }
 
-  // 期間内に存在するスキップ日だけ有効にする
+  // ★ skipDays の数だけスキップ日を有効にする
   const skipSet = new Set();
-  (state.skipDates || []).forEach(raw => {
+  const rawSkipDates = (state.skipDates || []).slice(0, state.skipDays || 0);
+  rawSkipDates.forEach(raw => {
     if (!raw) return;
     if (raw >= dates[0] && raw <= dates[dates.length - 1]) {
       skipSet.add(raw);
@@ -306,6 +307,7 @@ function buildCalendarInfo() {
     activeDateToIndex   // 非スキップ日付 → 0〜6
   };
 }
+
 
 // =====================
 // 期間 & 集計
@@ -468,6 +470,10 @@ function renderSkipDateInputs() {
 
   const n = Number(state.skipDays) || 0;
   if (n <= 0) {
+    // ★ skipDays=0 のときは内部もリセット
+    state.skipDates = [];
+    saveState();
+
     const p = document.createElement("div");
     p.className = "text-small muted";
     p.textContent = "スキップカードを使わない週です。";
@@ -1099,10 +1105,19 @@ function setupSettings() {
       if (v > 7) v = 7;
       state.skipDays = v;
       skipDaysInput.value = v;
+  
+      // ★ skipDates を skipDays に合わせて揃える
+      if (!state.skipDates) state.skipDates = [];
+      if (v === 0) {
+        state.skipDates = [];        // ← 枚数0なら全部リセット
+      } else {
+        state.skipDates = state.skipDates.slice(0, v);
+      }
+  
       saveState();
-      renderSkipDateInputs();
+      renderSkipDateInputs();         // UIも更新
     });
-  }
+  }  
 
   if (periodStartInput) {
     periodStartInput.value = state.periodStart || "";
