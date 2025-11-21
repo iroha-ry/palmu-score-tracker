@@ -9,8 +9,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, #19223a 0, #050814 50%, #05050b 100%);
-  color: #f5f7ff;
+  background: #f3f4fb; /* 明るめのグレー寄りホワイト */
+  color: #1f2933;
 }
 
 body {
@@ -31,24 +31,25 @@ h1 {
   display: flex;
   align-items: center;
   gap: 8px;
+  color: #111827;
 }
 
 .subtitle {
   font-size: 0.8rem;
-  color: #a2aac9;
+  color: #6b7280;
   line-height: 1.5;
 }
 
 label {
   font-size: 0.8rem;
-  color: #c7ceec;
+  color: #374151;
   display: block;
   margin-bottom: 4px;
 }
 
 .text-small {
   font-size: 0.74rem;
-  color: #8e96b8;
+  color: #9ca3af;
 }
 
 .muted {
@@ -67,11 +68,16 @@ label {
 }
 
 .card {
-  background: rgba(20, 27, 55, 0.96);
+  background: #ffffff;
   border-radius: 16px;
   padding: 14px 14px 12px;
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(103, 126, 255, 0.18);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+/* 念のためカードからはみ出さないように */
+.card {
+  overflow-x: hidden;
 }
 
 .card-header {
@@ -85,11 +91,12 @@ label {
 .card-title {
   font-size: 0.9rem;
   font-weight: 600;
+  color: #111827;
 }
 
 .card-sub {
   font-size: 0.74rem;
-  color: #9199c0;
+  color: #6b7280;
 }
 
 /* ---------- Chips / Pills ---------- */
@@ -99,10 +106,10 @@ label {
   align-items: center;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(66, 133, 244, 0.18);
+  background: rgba(37, 99, 235, 0.08);
   font-size: 0.7rem;
-  color: #c2d2ff;
-  border: 1px solid rgba(124, 178, 255, 0.5);
+  color: #1d4ed8;
+  border: 1px solid rgba(37, 99, 235, 0.35);
 }
 
 .chips {
@@ -116,9 +123,9 @@ label {
   font-size: 0.7rem;
   padding: 2px 8px;
   border-radius: 999px;
-  border: 1px solid rgba(145, 160, 245, 0.7);
-  color: #c7d1ff;
-  background: rgba(13, 22, 55, 0.85);
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  background: #f9fafb;
 }
 
 /* ---------- Stats / Progress ---------- */
@@ -133,25 +140,26 @@ label {
 
 .stat-label {
   font-size: 0.75rem;
-  color: #9aa3cc;
+  color: #6b7280;
 }
 
 .stat-value {
   font-size: 0.8rem;
   text-align: right;
+  color: #111827;
 }
 
 .stat-highlight {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #111827;
 }
 
 .progress {
   margin-top: 8px;
   height: 6px;
   border-radius: 999px;
-  background: rgba(46, 59, 112, 0.8);
+  background: #e5e7eb;
   overflow: hidden;
 }
 
@@ -159,7 +167,7 @@ label {
   height: 100%;
   width: 0%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #4adeff, #7c5cff, #ffce6b);
+  background: linear-gradient(90deg, #60a5fa, #a855f7, #f97373);
   transition: width 0.3s ease;
 }
 
@@ -175,27 +183,27 @@ label {
 }
 
 .badge-rank {
-  background: rgba(119, 132, 255, 0.2);
-  border-color: rgba(153, 167, 255, 0.8);
-  color: #e4e7ff;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
 }
 
 .badge-up {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: rgba(56, 189, 248, 0.8);
-  color: #e0fbff;
+  background: #ecfeff;
+  border-color: #22c55e;
+  color: #047857;
 }
 
 .badge-keep {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: rgba(34, 197, 94, 0.7);
-  color: #d3fbe1;
+  background: #ecfdf5;
+  border-color: #6ee7b7;
+  color: #047857;
 }
 
 .badge-down {
-  background: rgba(248, 113, 113, 0.1);
-  border-color: rgba(248, 113, 113, 0.7);
-  color: #fecaca;
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
 }
 
 /* ---------- Inputs / Buttons ---------- */
@@ -204,26 +212,49 @@ input,
 select,
 textarea {
   width: 100%;
-  max-width: 100%;
+  max-width: 100%;          /* はみ出し防止 */
   font-size: 0.8rem;
   padding: 7px 9px;
   border-radius: 10px;
-  border: 1px solid rgba(101, 117, 190, 0.8);
-  background: rgba(5, 12, 34, 0.9);
-  color: #f5f7ff;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
   outline: none;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: rgba(129, 140, 248, 0.95);
-  box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.4);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
 }
 
 textarea {
   resize: vertical;
   min-height: 60px;
+}
+
+/* 日付入力は共通で中央寄せ＆はみ出さないように */
+input[type="date"] {
+  text-align: center;
+  -webkit-appearance: none;
+}
+
+/* 7日間の開始日 & デイリー実績の日付用のピンポイント調整 */
+#periodStartInput,
+#date {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: block;
+}
+
+/* PC でも極端に広くならないように */
+@media (min-width: 769px) {
+  #periodStartInput,
+  #date {
+    max-width: 260px;
+  }
 }
 
 .input-row {
@@ -234,6 +265,8 @@ textarea {
 .input-row > div {
   flex: 1 1 0;
 }
+
+/* ボタン */
 
 .btn,
 .btn-sm {
@@ -246,9 +279,9 @@ textarea {
 
 .btn {
   padding: 9px 14px;
-  background: linear-gradient(135deg, #4f8cff, #63c5ff);
-  color: #050816;
-  box-shadow: 0 10px 25px rgba(41, 160, 255, 0.45);
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(236, 72, 153, 0.25);
 }
 
 .btn:hover {
@@ -257,20 +290,27 @@ textarea {
 
 .btn-sm {
   padding: 5px 10px;
-  background: rgba(41, 152, 255, 0.12);
-  color: #d0e3ff;
-  border: 1px solid rgba(74, 144, 255, 0.8);
+  background: #e5e7eb;
+  color: #111827;
+  border: 1px solid #d1d5db;
 }
 
 .btn-sm.danger,
 .danger.btn-sm {
-  background: rgba(239, 68, 68, 0.14);
-  border-color: rgba(248, 113, 113, 0.9);
-  color: #fecaca;
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #b91c1c;
 }
 
 .btn-block {
   width: 100%;
+}
+
+/* セカンダリ（再配分ボタン用とか） */
+.btn-secondary {
+  background: linear-gradient(135deg, #3b82f6, #22c55e);
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(34, 197, 94, 0.25);
 }
 
 /* ---------- Tables ---------- */
@@ -288,27 +328,47 @@ td {
 }
 
 thead th {
-  border-bottom: 1px solid rgba(102, 122, 199, 0.8);
-  color: #c5cfff;
+  border-bottom: 1px solid #e5e7eb;
+  color: #4b5563;
   text-align: left;
 }
 
 tbody tr:nth-child(odd) {
-  background: rgba(9, 15, 39, 0.8);
+  background: #f9fafb;
 }
 
 tbody tr:nth-child(even) {
-  background: rgba(13, 21, 49, 0.8);
+  background: #ffffff;
 }
 
 .text-right {
   text-align: right;
 }
 
-/* コイン強調 */
+/* ★ コイン強調：黄色→明るめピンクに変更 */
 .coin-text {
-  color: #ffd86b;
+  color: #f973b9;     /* ピンク */
   font-weight: 600;
+}
+
+/* ---------- スキップ日エリア ---------- */
+
+.skip-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skip-dates-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.skip-dates-row input[type="date"] {
+  flex: 1;
+  min-width: 0;
 }
 
 /* ---------- Responsive (スマホ) ---------- */
@@ -340,21 +400,7 @@ tbody tr:nth-child(even) {
     flex-direction: column;
   }
 
-  .skip-dates-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .btn,
-  .btn-sm {
-    font-size: 0.78rem;
-  }
-
-  th,
-  td {
-    font-size: 0.72rem;
-  }
-
+  /* スキップ日行は縦並びにしてはみ出し防止 */
   .skip-dates-row {
     flex-direction: column;
     align-items: flex-start;
@@ -364,52 +410,20 @@ tbody tr:nth-child(even) {
     width: 100%;
   }
 
+  /* スマホでの date 入力サイズ調整 */
   input[type="date"] {
     font-size: 0.8rem;
     padding-top: 6px;
     padding-bottom: 6px;
   }
-}
 
-/* スキップ日指定エリア */
-.skip-dates {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+  th,
+  td {
+    font-size: 0.72rem;
+  }
 
-.skip-dates-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-}
-
-.skip-dates-row input[type="date"] {
-  flex: 1;
-  min-width: 0;
-}
-
-.skip-dates-row label {
-  margin: 0;
-}
-
-/* セカンダリボタン（計画再配分用） */
-.btn-secondary {
-  background: linear-gradient(135deg, #3b82f6, #22c55e);
-  color: #041016;
-  box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
-}
-
-/* date入力のズレ軽減（PC/スマホ共通） */
-input[type="date"] {
-  text-align: center;
-}
-
-@media (max-width: 768px) {
-  input[type="date"] {
-    font-size: 0.8rem;
-    padding-top: 6px;
-    padding-bottom: 6px;
+  .btn,
+  .btn-sm {
+    font-size: 0.78rem;
   }
 }
