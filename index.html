@@ -54,16 +54,14 @@
             <div class="stat-label" id="upConditionLabel">ランクアップ条件（18pt以上）</div>
             <div class="stat-value">
               あと <span id="needUpPoints">18</span> pt
-              （目安 <span id="needUpCoins">-</span> コイン）
             </div>
           </div>
           <div class="stat-row">
             <div class="stat-label" id="keepConditionLabel">キープ条件（12pt以上）</div>
             <div class="stat-value">
               あと <span id="needKeepPoints">12</span> pt
-              （目安 <span id="needKeepCoins">-</span> コイン）
             </div>
-          </div>
+          </div>          
           <div class="stat-row">
             <div class="stat-label">ダウン回避までの余裕</div>
             <div class="stat-value">
@@ -142,15 +140,6 @@
             <div class="text-small">
               スキップカード1枚 = 1日遅延なので「1」。<br />
               0ならスキップなしとして計算します。
-            </div>
-          </div>
-
-          <div>
-            <label for="coinsPerPoint">1ptあたりのコイン数（任意・手動上書き）</label>
-            <input id="coinsPerPoint" type="number" min="0" step="100" placeholder="例）2000" />
-            <div class="text-small">
-              ランクごとのデフォルト値は app.js の<b>DEFAULT_RANK_CONFIG</b>に定義。<br />
-              ここに入力すると、その値で残りpt→コイン目安を計算します。
             </div>
           </div>
 

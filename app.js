@@ -363,14 +363,6 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / ONE_DAY);
 }
 
-// 手動指定があればそれ優先、なければランクの coinsPerPoint
-function effectiveCoinsPerPoint(rank) {
-  const cfg = getRankConfig(rank);
-  const manual = Number(state.coinsPerPoint) || 0;
-  if (manual > 0) return manual;
-  return cfg.coinsPerPoint || 0;
-}
-
 function pickRealisticPlus(targetPerDay) {
   for (const v of ALLOWED_PLUS) {
     if (v >= targetPerDay) return v;
@@ -654,8 +646,6 @@ function renderDashboard() {
   const sum7El = document.getElementById("sum7");
   const needUpPointsEl = document.getElementById("needUpPoints");
   const needKeepPointsEl = document.getElementById("needKeepPoints");
-  const needUpCoinsEl = document.getElementById("needUpCoins");
-  const needKeepCoinsEl = document.getElementById("needKeepCoins");
   const safeMarginPointsEl = document.getElementById("safeMarginPoints");
   const progressBar = document.getElementById("progressBar");
   const statusBadge = document.getElementById("statusBadge");
@@ -734,19 +724,6 @@ function renderDashboard() {
   if (needUpPointsEl) needUpPointsEl.textContent = needUpPoints;
   if (needKeepPointsEl) needKeepPointsEl.textContent = needKeepPoints;
   if (safeMarginPointsEl) safeMarginPointsEl.textContent = safeMargin;
-
-  const cpp = effectiveCoinsPerPoint(rank);
-  if (cpp > 0) {
-    if (needUpCoinsEl)
-      needUpCoinsEl.textContent =
-        needUpPoints > 0 ? formatNumber(needUpPoints * cpp) : "0";
-    if (needKeepCoinsEl)
-      needKeepCoinsEl.textContent =
-        needKeepPoints > 0 ? formatNumber(needKeepPoints * cpp) : "0";
-  } else {
-    if (needUpCoinsEl) needUpCoinsEl.textContent = "-";
-    if (needKeepCoinsEl) needKeepCoinsEl.textContent = "-";
-  }
 
   // プログレスバー（UPに対する達成度）
   if (progressBar) {
@@ -898,7 +875,6 @@ function setupForm() {
 function setupSettings() {
   const rankSelect = document.getElementById("currentRank");
   const goalTypeSelect = document.getElementById("goalType");
-  const cppInput = document.getElementById("coinsPerPoint");
   const skipDaysInput = document.getElementById("skipDays");
   const periodStartInput = document.getElementById("periodStartInput");
 
@@ -914,14 +890,6 @@ function setupSettings() {
     goalTypeSelect.value = state.goalType || "UP";
     goalTypeSelect.addEventListener("change", () => {
       state.goalType = goalTypeSelect.value;
-      updateAll();
-    });
-  }
-
-  if (cppInput) {
-    cppInput.value = state.coinsPerPoint || "";
-    cppInput.addEventListener("change", () => {
-      state.coinsPerPoint = Number(cppInput.value) || 0;
       updateAll();
     });
   }
