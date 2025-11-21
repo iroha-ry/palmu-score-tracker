@@ -204,6 +204,7 @@ input,
 select,
 textarea {
   width: 100%;
+  max-width: 100%;
   font-size: 0.8rem;
   padding: 7px 9px;
   border-radius: 10px;
@@ -337,6 +338,11 @@ tbody tr:nth-child(even) {
 
   .input-row {
     flex-direction: column;
+  }
+
+  .skip-dates-row {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .btn,
