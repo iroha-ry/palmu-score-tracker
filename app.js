@@ -15,7 +15,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 const STATE_COLLECTION = "palmuStates";
-const STATE_DOC_ID = "main";
+const STATE_DOC_ID = "main_B";
 const stateDocRef = db.collection(STATE_COLLECTION).doc(STATE_DOC_ID);
 
 // 1日に取りうる＋値
