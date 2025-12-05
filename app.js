@@ -197,6 +197,7 @@ function normalizeState() {
     state.lastPrevAutoFillYMD = null;
   }
   
+  
   normalizePlan();
 }
 
@@ -355,6 +356,46 @@ function buildCalendarInfo() {
   };
 }
 
+function sanitizePlus(v) {
+  const n = Number(v);
+  return ALLOWED_PLUS.includes(n) ? n : 0;
+}
+
+function genEntryId(dateStr) {
+  return `${dateStr}_${Date.now()}`;
+}
+
+function findEntryIndexByDate(dateStr) {
+  return (state.entries || []).findIndex(e => e && e.date === dateStr);
+}
+
+// 同じdateがあれば上書き、なければ追加
+function upsertEntryByDate(dateStr, patch) {
+  if (!Array.isArray(state.entries)) state.entries = [];
+
+  const idx = findEntryIndexByDate(dateStr);
+
+  if (idx >= 0) {
+    state.entries[idx] = {
+      ...state.entries[idx],
+      ...patch,
+      date: dateStr,
+      id: state.entries[idx].id || genEntryId(dateStr)
+    };
+  } else {
+    state.entries.push({
+      id: genEntryId(dateStr),
+      date: dateStr,
+      drp: 0,
+      coins: 0,
+      hours: "",
+      memo: "",
+      ...patch
+    });
+  }
+}
+
+
 
 // =====================
 // 期間 & 集計
@@ -489,16 +530,29 @@ function renderEntries() {
 
     const tdActions = document.createElement("td");
     tdActions.className = "text-right";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "btn-sm";
+    editBtn.type = "button";
+    editBtn.textContent = "編集";
+    editBtn.addEventListener("click", () => {
+      enterEntryEditMode(tr, entry);
+    });
+
     const delBtn = document.createElement("button");
     delBtn.className = "btn-sm danger";
     delBtn.type = "button";
     delBtn.textContent = "削除";
+    delBtn.style.marginLeft = "6px";
     delBtn.addEventListener("click", () => {
-      if (!confirm(`${entry.date} のデータを削除しますか？`)) return;
+    if (!confirm(`${entry.date} のデータを削除しますか？`)) return;
       state.entries = state.entries.filter(e => e.id !== entry.id);
       updateAll();
     });
+
+    tdActions.appendChild(editBtn);
     tdActions.appendChild(delBtn);
+
 
     tr.appendChild(tdDate);
     tr.appendChild(tdDrp);
@@ -509,6 +563,101 @@ function renderEntries() {
     tbody.appendChild(tr);
   }
 }
+
+function enterEntryEditMode(tr, entry) {
+  tr.innerHTML = "";
+
+  // 日付
+  const tdDate = document.createElement("td");
+  const dateInput = document.createElement("input");
+  dateInput.type = "date";
+  dateInput.value = entry.date || "";
+  tdDate.appendChild(dateInput);
+
+  // ＋
+  const tdDrp = document.createElement("td");
+  tdDrp.className = "text-right";
+  const drpSelect = document.createElement("select");
+  [1, 2, 4, 6].forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = String(p);
+    opt.textContent = `＋${p}`;
+    if (Number(entry.drp) === p) opt.selected = true;
+    drpSelect.appendChild(opt);
+  });
+  tdDrp.appendChild(drpSelect);
+
+  // コイン
+  const tdCoins = document.createElement("td");
+  tdCoins.className = "text-right";
+  const coinsInput = document.createElement("input");
+  coinsInput.type = "number";
+  coinsInput.min = "0";
+  coinsInput.placeholder = "コイン";
+  coinsInput.value = entry.coins ? String(entry.coins) : "";
+  coinsInput.style.maxWidth = "140px";
+  tdCoins.appendChild(coinsInput);
+
+  // メモ
+  const tdMemo = document.createElement("td");
+  const memoInput = document.createElement("input");
+  memoInput.type = "text";
+  memoInput.placeholder = "時間/メモ";
+  const texts = [];
+  if (entry.hours) texts.push(entry.hours);
+  if (entry.memo) texts.push(entry.memo);
+  memoInput.value = texts.join(" / ");
+  tdMemo.appendChild(memoInput);
+
+  // 操作
+  const tdActions = document.createElement("td");
+  tdActions.className = "text-right";
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "btn-sm";
+  saveBtn.type = "button";
+  saveBtn.textContent = "保存";
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.className = "btn-sm";
+  cancelBtn.type = "button";
+  cancelBtn.textContent = "取消";
+  cancelBtn.style.marginLeft = "6px";
+
+  saveBtn.addEventListener("click", () => {
+    const newDate = dateInput.value;
+    const newDrp = sanitizePlus(drpSelect.value);
+    const newCoins = coinsInput.value ? Number(coinsInput.value) : 0;
+
+    // hoursとmemoは簡易的にまとめ入力扱いでもOK
+    const mergedMemo = memoInput.value.trim();
+
+    // 同日統合（date基準で1本化運用）
+    // いったん元idレコードを除外
+    state.entries = (state.entries || []).filter(e => e.id !== entry.id);
+
+    upsertEntryByDate(newDate, {
+      drp: newDrp,
+      coins: newCoins,
+      hours: "",        // 必要なら分けてUI作る
+      memo: mergedMemo
+    });
+
+    updateAll();
+  });
+
+  cancelBtn.addEventListener("click", () => updateAll());
+
+  tdActions.appendChild(saveBtn);
+  tdActions.appendChild(cancelBtn);
+
+  tr.appendChild(tdDate);
+  tr.appendChild(tdDrp);
+  tr.appendChild(tdCoins);
+  tr.appendChild(tdMemo);
+  tr.appendChild(tdActions);
+}
+
 
 function renderSkipDateInputs() {
   const container = document.getElementById("skipDatesContainer");
@@ -1195,16 +1344,15 @@ function setupForm() {
       return;
     }
 
-    const entry = {
-      id: `${date}_${Date.now()}`,
-      date,
-      drp,
+    upsertEntryByDate(date, {
+      drp: sanitizePlus(drp),
       coins,
       hours,
       memo
-    };
-    state.entries.push(entry);
+    });
+    
     updateAll();
+    
 
     drpInput.value = "1";
     coinsInput.value = "";
@@ -1314,41 +1462,34 @@ function getYesterdayStr() {
   return formatDateYMD(y);
 }
 
-async function ensurePrevDayAutoPlus1() {
+function ensurePrevDayAutoPlus1() {
   if (!state.autoPlus1PrevDay) return;
 
   const yesterdayStr = getYesterdayStr();
 
-  // 多重実行防止（同じ前日には1回だけ）
+  // 同じ前日には1回だけ
   if (state.lastPrevAutoFillYMD === yesterdayStr) return;
 
-  if (!state.dailyEntries) state.dailyEntries = {};
-
-  // 前日の実績が既にあるなら何もしない
-  if (state.dailyEntries[yesterdayStr]) {
+  // 前日のentriesが既にあるなら何もしない（フラグだけ更新）
+  const idx = findEntryIndexByDate(yesterdayStr);
+  if (idx >= 0) {
     state.lastPrevAutoFillYMD = yesterdayStr;
     saveState();
     return;
   }
 
-  // 前日未入力 → ＋1で補完
-  state.dailyEntries[yesterdayStr] = {
-    plus: 1,
-    memo: "auto +1 (prev day)",
-    updatedAt: Date.now()
-  };
+  // 前日未入力 → ＋1補完（drp=1）
+  upsertEntryByDate(yesterdayStr, {
+    drp: 1,
+    coins: 0,
+    hours: "",
+    memo: "auto +1 (prev day)"
+  });
 
   state.lastPrevAutoFillYMD = yesterdayStr;
   saveState();
-
-  // Firestore保存関数がある前提
-  if (typeof saveDailyEntryToFirestore === "function") {
-    await saveDailyEntryToFirestore(
-      yesterdayStr,
-      state.dailyEntries[yesterdayStr]
-    ).catch(() => {});
-  }
 }
+
 
 let lastDayStr = null;
 let midnightWatcherId = null;
@@ -1368,7 +1509,7 @@ function startMidnightWatcher() {
     // 日付が変わった瞬間を検知
     if (todayStr !== lastDayStr) {
       lastDayStr = todayStr;
-      await ensurePrevDayAutoPlus1();
+      ensurePrevDayAutoPlus1();
       updateAll();
     }
   };
@@ -1394,7 +1535,7 @@ async function initApp() {
   setupHaneCounter();
   startMidnightWatcher();
 
-  await ensurePrevDayAutoPlus1();
+  ensurePrevDayAutoPlus1();
 
   updateAll();
 }
